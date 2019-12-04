@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {loginUser} from '../../data/actions';
+import PropTypes from 'prop-types';
+import classnames from 'classnames';
 
 class Login extends Component {
   constructor(props) {
@@ -27,9 +29,25 @@ class Login extends Component {
     e.preventDefault();
     const { password, email } = this.state;
     const dataUser = { email, password };
-    console.log(dataUser);
 
     this.props.loginUser(dataUser, this.props.history);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAunthenticated) {
+      this.props.history.push("/dashboard");
+    }
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
   }
 
   render() {
@@ -56,8 +74,12 @@ class Login extends Component {
                   id="email"
                   error={errors.email}
                   value={this.state.email}
+                  placeholder="Type your email"
+                  className={classnames("", {
+                    invalid: errors.email
+                  })}
                 />
-                <label htmlFor="email">Email</label>
+                <span className="red-text">{errors.email}</span>
               </div>
               <div className="input-field col s12">
                 <input
@@ -67,8 +89,12 @@ class Login extends Component {
                   id="password"
                   errors={errors.password}
                   value={this.state.password}
+                  placeholder="Type your password"
+                  className={classnames("", {
+                    invalid: errors.password
+                  })}
                 />
-                <label htmlFor="password">Password</label>
+                <span className="red-text">{errors.password}</span>
               </div>
               <div className="col s12" style={{ paddingLeft: "11px" }}>
                 <button
@@ -92,6 +118,15 @@ class Login extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    auth: state.auth,
+    errors: state.errors
+  }
+}
 
+Login.propTypes = {
+  errors: PropTypes.object.isRequired
+}
 
-export default connect(null, { loginUser })(Login);
+export default connect(mapStateToProps, { loginUser })(Login);
