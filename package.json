@@ -23,6 +23,13 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+  "proxy": "https://fullstack-login.herokuapp.com",
+>>>>>>> 550854cb64ab6552a56ae53494c158c855b45826
+>>>>>>> c00e55d707b5a97cb7f10b914c568195fafa6d13
   "eslintConfig": {
     "extends": "react-app"
   },
