@@ -12,7 +12,8 @@ export default function (state = INITIAL_STATE, {type, payload}){
         case SET_CURRENT_USER:
             return {
                 ...state,
-                isAuthenticated: !isEmpty(payload)
+                isAuthenticated: !isEmpty(payload),
+                user: payload
             }
         case USER_LOADING:
             return {

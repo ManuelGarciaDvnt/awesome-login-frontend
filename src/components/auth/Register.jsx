@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { connect } from 'react-redux'
-import { registerUser } from '../../data/actions'
+import { connect } from 'react-redux';
+import { registerUser } from '../../data/actions';
+
+import PropTypes from 'prop-types';
+import classnames from 'classnames'
 
 class Register extends Component {
   constructor(props) {
@@ -32,6 +35,21 @@ class Register extends Component {
     
     this.props.registerUser(newUser, this.props.history);
   }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.errors){
+      this.setState({
+        errors: nextProps.errors
+      })
+    }
+  }
+
+  componentDidMount(){
+    if(this.props.auth.isAuthenticated){
+      this.props.history.push("/dashboard")
+    }
+  }
+
 
   render() {
     const { errors } = this.state;
@@ -67,8 +85,12 @@ class Register extends Component {
                   type="text"
                   errors={errors.name}
                   value={this.state.name}
+                  placeholder="Type your name"
+                  className={classnames("", {
+                    invalid: errors.name
+                  })}
                 />
-                <label htmlFor="name">Name</label>
+                <span className="red-text">{errors.name}</span>
               </div>
               <div className="input-field col s12">
                 <input
@@ -78,8 +100,12 @@ class Register extends Component {
                   id="email"
                   errors={errors.email}
                   value={this.state.email}
+                  placeholder="Type your email"
+                  className={classnames("", {
+                    invalid: errors.email
+                  })}
                 />
-                <label htmlFor="email">Email</label>
+                <span className="red-text">{errors.email}</span>
               </div>
               <div className="input-field col s12">
                 <input
@@ -89,8 +115,12 @@ class Register extends Component {
                   id="password"
                   errors={errors.password}
                   value={this.state.password}
+                  placeholder="Type your password"
+                  className={classnames("", {
+                    invalid: errors.password
+                  })}
                 />
-                <label htmlFor="password">Password</label>
+                <span className="red-text">{errors.password}</span>
               </div>
               <div className="input-field col s12">
                 <input
@@ -100,20 +130,27 @@ class Register extends Component {
                   type="password"
                   errors={errors.repeatpassword}
                   value={this.state.repeatpassword}
+                  placeholder="Repeat passsword"
+                  className={classnames("", {
+                    invalid: errors.repeatpassword
+                  })}
                 />
-                <label htmlFor="password">Repeat Password</label>
+                <span className="red-text">{errors.repeatpassword}</span>
               </div>
-              <div className="col s12" style={{paddingLeft: "11px"}}>
-                <button type="submit" style={{
+              <div className="col s12" style={{ paddingLeft: "11px" }}>
+                <button
+                  type="submit"
+                  style={{
                     width: "150px",
                     borderRadius: "3px",
                     letterSpacing: "1.5px",
                     marginTop: "1em"
-                }}
-                className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-                >Register</button>
+                  }}
+                  className="btn btn-large waves-effect waves-light hoverable blue accent-3"
+                >
+                  Register
+                </button>
               </div>
-
             </form>
           </div>
         </div>
@@ -122,5 +159,18 @@ class Register extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    auth: state.auth,
+    errors: state.errors
+  }
+}
 
-export default connect(null, { registerUser })(Register)
+Register.propTypes = {
+  registerUser : PropTypes.func.isRequired,
+  auth : PropTypes.object.isRequired,
+  errors : PropTypes.object.isRequired
+}
+
+
+export default connect(mapStateToProps, { registerUser })(Register)
