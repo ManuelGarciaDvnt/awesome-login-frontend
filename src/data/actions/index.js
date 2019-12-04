@@ -6,22 +6,22 @@ import isEmpty from "is-empty";
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from "./types";
 
 export const registerUser = (data, history) => {
-  return async dispatch => {
-    try {
+  return dispatch => {
       dispatch({
         type: GET_ERRORS,
         payload: { name: "", email: "", password: "", repeatpassword: "" }
       })
-      await axios.post("https://fullstack-login.herokuapp.com/register", data);
-      history.push("/login");
-    } catch (error) {
-      dispatch({
-        type: GET_ERRORS,
-        payload: error.response.data
-      });
+      axios.post("https://fullstack-login.herokuapp.com/register", data)
+      .then(res => {
+        history.push("/login");
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      
     }
-  };
 };
+
 
 export const loginUser = (data, history) => {
   return dispatch => {
